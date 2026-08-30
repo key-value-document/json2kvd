@@ -1,6 +1,6 @@
 # json2kvd
 
-Convert JSON documents to KVD — and KVD to JSON with `--reverse`.
+Convert JSON documents to KVD and KVD to JSON.
 
 KVD is a line-oriented config/data format that keeps YAML/JSON readability without pitfalls: strict 2-space indentation, no flow collections, no implicit coercion, exactly one way to spell most things.
 
