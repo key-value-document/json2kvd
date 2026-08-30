@@ -1,0 +1,54 @@
+# CI for json2kvd.
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: rust:1-trixie
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Cache cargo registry and target
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install rustfmt and clippy
+        run: rustup component add rustfmt clippy
+
+      - name: Format
+        run: cargo fmt --check
+
+      - name: Test
+        run: cargo test
+
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Release build
+        run: cargo build --release
+
+      - name: Package crate
+        run: cargo package
+
+      - name: Upload crate artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: json2kvd-crate
+          path: target/package/*.crate
+          if-no-files-found: error
+          retention-days: 14

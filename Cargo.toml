@@ -1,0 +1,19 @@
+[package]
+name = "json2kvd"
+description = "Convert JSON documents to KVD — and KVD to JSON with --reverse"
+version = "1.0.0"
+edition = "2024"
+rust-version = "1.85.0"
+license = "MIT"
+repository = "https://github.com/key-value-document/json2kvd"
+keywords = ["kvd", "json", "config", "conversion", "cli"]
+categories = ["command-line-utilities", "config", "encoding"]
+exclude = [".github/**", ".gitignore"]
+
+[dependencies]
+clap = { version = "4.6.6", features = ["derive"] }
+kvd-rs = "1.0.0"
+serde_json = "1.0.151"
+
+[patch.crates-io]
+kvd-rs = { path = "../kvd-rs" }
