@@ -48,6 +48,9 @@ fn json_nested_map_round_trips() {
     let kvd = json_text_to_kvd(json, None).unwrap();
     assert!(kvd.contains("port: 9000"));
     assert!(kvd.contains("\"localhost\""));
+    // underscore ints still round-trip back to plain JSON ints
+    let json2 = kvd_text_to_json(&kvd).unwrap();
+    assert!(json2.contains("9000"));
 }
 
 #[test]
@@ -101,4 +104,18 @@ fn json_multiline_string() {
     let kvd = json_text_to_kvd(json, None).unwrap();
     // multiline strings become """ blocks on KVD side
     assert!(kvd.contains("\"\"\"") || kvd.contains("line1"));
+}
+
+#[test]
+fn kvd_underscore_int_becomes_json_int() {
+    // underscores are accepted input (spec §3) but never emitted
+    let json = kvd_text_to_json("port: 8_080\n").unwrap();
+    assert!(json.contains("8080"));
+}
+
+#[test]
+fn kvd_dict_becomes_json_object() {
+    let kvd = "metrics:\n  = \"a.b/c\": 1\n";
+    let json = kvd_text_to_json(kvd).unwrap();
+    assert!(json.contains("a.b/c"));
 }

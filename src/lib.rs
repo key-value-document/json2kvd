@@ -78,9 +78,10 @@ pub fn to_json_value(node: &Node) -> Result<Value, Error> {
         Node::Scalar(s) => match s.shape {
             Shape::Bool => Ok(Value::Bool(s.text == "true")),
             Shape::Int => {
-                if let Ok(i) = s.text.parse::<i64>() {
+                let clean: String = s.text.chars().filter(|c| *c != '_').collect();
+                if let Ok(i) = clean.parse::<i64>() {
                     Ok(Value::Number(i.into()))
-                } else if let Ok(u) = s.text.parse::<u64>() {
+                } else if let Ok(u) = clean.parse::<u64>() {
                     Ok(Value::Number(u.into()))
                 } else {
                     Err(Error(format!(
@@ -113,7 +114,7 @@ pub fn to_json_value(node: &Node) -> Result<Value, Error> {
             Shape::Str => Ok(Value::String(s.text.clone())),
             Shape::Null => Ok(Value::Null),
         },
-        Node::Map(m) => {
+        Node::Map(m) | Node::Dict(m) => {
             let mut out = serde_json::Map::new();
             for (k, v) in m.iter() {
                 out.insert(k.to_string(), to_json_value(v)?);
