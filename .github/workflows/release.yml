@@ -1,6 +1,3 @@
-# Publish json2kvd to crates.io on tagged releases.
-# Requires kvd-rs 1.0.0 to already be published.
-
 name: release
 
 on:

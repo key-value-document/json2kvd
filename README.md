@@ -36,7 +36,7 @@ Input `values.json`:
 
 Output `values.kvd`:
 
-```
+```kvd
 app:
   name: "hello"
   port: 8080
@@ -52,9 +52,7 @@ json2kvd --reverse values.kvd
 
 ```toml
 [dependencies]
-json2kvd = "1.0.0"
-kvd-rs = "1.0.0"
-serde_json = "1.0.151"
+json2kvd = "1.1.0"
 ```
 
 ```rust
